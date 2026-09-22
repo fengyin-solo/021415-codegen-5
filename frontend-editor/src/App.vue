@@ -1,8 +1,16 @@
 <template>
   <div class="app">
-    <Toolbar @action="handleToolbarAction" />
-    <EditorPane ref="editorPane" @ready="onEditorReady" />
+    <Toolbar
+      @action="handleToolbarAction"
+      @open-settings="settingsOpen = true"
+    />
+    <EditorPane ref="editorPane" @ready="onEditorReady" @notify="showToast" />
     <StatusBar />
+    <SettingsPanel
+      :open="settingsOpen"
+      @close="settingsOpen = false"
+      @notify="showToast"
+    />
     <Transition name="toast">
       <div v-if="toast.visible" :class="['toast', `toast--${toast.type}`]">
         {{ toast.message }}
@@ -12,13 +20,17 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
 import Toolbar from '@/components/Toolbar.vue'
 import EditorPane from '@/components/EditorPane.vue'
 import StatusBar from '@/components/StatusBar.vue'
+import SettingsPanel from '@/components/SettingsPanel.vue'
+import { useSettingsStore } from '@/stores/settings'
 
 const editorPane = ref(null)
 let editorView = null
+const settings = useSettingsStore()
+const settingsOpen = ref(false)
 
 const toast = reactive({ visible: false, message: '', type: 'info' })
 let toastTimer = null
@@ -71,6 +83,23 @@ function handleToolbarAction(action) {
   const fn = map[action]
   fn ? fn() : showToast(`未知操作: ${action}`, 'warning')
 }
+
+// Surface store-level storage warnings in the existing toast UI, and make
+// sure pending preference writes are flushed when the page goes away.
+const stopNotify = settings.onNotify(showToast)
+function onPageHide() {
+  settings.handleHide()
+}
+
+onMounted(() => {
+  window.addEventListener('pagehide', onPageHide)
+  document.addEventListener('visibilitychange', onPageHide)
+})
+onBeforeUnmount(() => {
+  stopNotify?.()
+  window.removeEventListener('pagehide', onPageHide)
+  document.removeEventListener('visibilitychange', onPageHide)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -79,6 +108,7 @@ function handleToolbarAction(action) {
   flex-direction: column;
   height: 100vh;
   background: $bg;
+  background-color: var(--c-bg);
 }
 
 .toast {
@@ -91,7 +121,7 @@ function handleToolbarAction(action) {
   font-size: $fs-sm;
   color: #fff;
   z-index: $z-toast;
-  box-shadow: $shadow-lg;
+  box-shadow: 0 8px 24px var(--c-shadow);
   pointer-events: none;
   font-family: $font-ui;
 

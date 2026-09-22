@@ -22,16 +22,30 @@
     </nav>
 
     <div class="toolbar__right">
+      <span v-if="settings.autosave && store.saveLabel" class="toolbar__saved">
+        {{ store.saveLabel }}
+      </span>
       <span class="toolbar__file">{{ store.fileName }}</span>
+      <button
+        class="toolbar__icon-btn"
+        type="button"
+        title="外观设置"
+        aria-label="外观设置"
+        @click="emit('open-settings')"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
     </div>
   </header>
 </template>
 
 <script setup>
 import { useEditorStore } from '@/stores/editor'
+import { useSettingsStore } from '@/stores/settings'
 
 const store = useEditorStore()
-const emit = defineEmits(['action'])
+const settings = useSettingsStore()
+const emit = defineEmits(['action', 'open-settings'])
 
 const I = (d, size = 16) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`
@@ -63,8 +77,8 @@ const actionGroups = [
   justify-content: space-between;
   height: 44px;
   padding: 0 $sp-4;
-  background: $bg-elevated;
-  border-bottom: 1px solid $border-light;
+  background: var(--c-bg-elevated);
+  border-bottom: 1px solid var(--c-border-light);
   user-select: none;
   flex-shrink: 0;
   z-index: $z-toolbar;
@@ -80,7 +94,7 @@ const actionGroups = [
     display: flex;
     align-items: center;
     gap: 6px;
-    color: $text;
+    color: var(--c-text);
   }
 
   &__name {
@@ -111,7 +125,7 @@ const actionGroups = [
     & + & {
       margin-left: $sp-2;
       padding-left: $sp-2;
-      border-left: 1px solid $border-light;
+      border-left: 1px solid var(--c-border-light);
     }
   }
 
@@ -125,12 +139,12 @@ const actionGroups = [
     background: transparent;
     border-radius: $r-md;
     cursor: pointer;
-    color: $text-2;
+    color: var(--c-text-2);
     transition: all $t-fast $ease;
 
     &:hover {
-      background: $accent-soft;
-      color: $accent;
+      background: var(--c-accent-soft);
+      color: var(--c-accent);
     }
     &:active {
       transform: scale(0.93);
@@ -141,13 +155,42 @@ const actionGroups = [
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    gap: $sp-2;
     min-width: 140px;
+  }
+
+  &__saved {
+    font-size: $fs-xs;
+    color: $success;
+    white-space: nowrap;
   }
 
   &__file {
     font-size: $fs-xs;
-    color: $text-3;
+    color: var(--c-text-3);
     font-family: $font-mono;
+  }
+
+  &__icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: transparent;
+    border-radius: $r-md;
+    cursor: pointer;
+    color: var(--c-text-2);
+    transition: all $t-fast $ease;
+
+    &:hover {
+      background: var(--c-accent-soft);
+      color: var(--c-accent);
+    }
+    &:active {
+      transform: scale(0.93);
+    }
   }
 }
 </style>

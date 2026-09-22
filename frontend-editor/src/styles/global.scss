@@ -10,6 +10,82 @@
   padding: 0;
 }
 
+// === Appearance preference custom properties ===
+// Font size / line width are written here by the settings store
+// (documentElement inline styles); theme palettes are branched via
+// [data-theme] so switching is a single attribute change.
+:root {
+  --editor-font-size: #{$fs-base};
+  --editor-line-width: 720px;
+
+  // Light (default — same palette the app shipped with)
+  --c-bg: #fafaf9;
+  --c-bg-editor: #ffffff;
+  --c-bg-elevated: #ffffff;
+  --c-bg-code: #f4f4f5;
+  --c-bg-code-block: #18181b;
+  --c-text: #1c1917;
+  --c-text-2: #57534e;
+  --c-text-3: #a8a29e;
+  --c-text-code: #e879f9;
+  --c-code-block-text: #d4d4d8;
+  --c-border: #e7e5e4;
+  --c-border-light: #f5f5f4;
+  --c-accent: #2563eb;
+  --c-accent-soft: rgba(37, 99, 235, 0.08);
+  --c-accent-mid: rgba(37, 99, 235, 0.15);
+  --c-active-line: rgba(0, 0, 0, 0.015);
+  --c-scrollbar: #a8a29e;
+  --c-scrollbar-hover: #57534e;
+  --c-shadow: rgba(0, 0, 0, 0.08);
+}
+
+// Warm paper
+:root[data-theme='sepia'] {
+  --c-bg: #f5ecd9;
+  --c-bg-editor: #fbf5e7;
+  --c-bg-elevated: #fbf5e7;
+  --c-bg-code: #efe4cb;
+  --c-bg-code-block: #3c3224;
+  --c-text: #3f3426;
+  --c-text-2: #6f5f48;
+  --c-text-3: #a99675;
+  --c-text-code: #ec4899;
+  --c-code-block-text: #e8dcc0;
+  --c-border: #e3d5b8;
+  --c-border-light: #ecdfc6;
+  --c-accent: #b45309;
+  --c-accent-soft: rgba(180, 83, 9, 0.08);
+  --c-accent-mid: rgba(180, 83, 9, 0.16);
+  --c-active-line: rgba(120, 80, 20, 0.03);
+  --c-scrollbar: #c3b08d;
+  --c-scrollbar-hover: #8a7657;
+  --c-shadow: rgba(90, 65, 20, 0.12);
+}
+
+// Dark
+:root[data-theme='dark'] {
+  --c-bg: #0c0a09;
+  --c-bg-editor: #131110;
+  --c-bg-elevated: #1c1917;
+  --c-bg-code: #292524;
+  --c-bg-code-block: #0a0908;
+  --c-text: #e7e5e4;
+  --c-text-2: #a8a29e;
+  --c-text-3: #78716c;
+  --c-text-code: #f0abfc;
+  --c-code-block-text: #d6d3d1;
+  --c-border: #292524;
+  --c-border-light: #1f1c1a;
+  --c-accent: #60a5fa;
+  --c-accent-soft: rgba(96, 165, 250, 0.1);
+  --c-accent-mid: rgba(96, 165, 250, 0.22);
+  --c-active-line: rgba(255, 255, 255, 0.03);
+  --c-scrollbar: #57534e;
+  --c-scrollbar-hover: #a8a29e;
+  --c-shadow: rgba(0, 0, 0, 0.5);
+}
+
 html {
   font-size: $fs-base;
   -webkit-font-smoothing: antialiased;
@@ -19,11 +95,12 @@ html {
 
 body {
   font-family: $font-ui;
-  color: $text;
-  background: $bg;
+  color: var(--c-text);
+  background: var(--c-bg);
   line-height: $lh;
   overflow: hidden;
   height: 100vh;
+  transition: background-color $t-normal $ease, color $t-normal $ease;
 }
 
 #app {
@@ -40,13 +117,13 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: $text-3;
+  background: var(--c-scrollbar);
   border-radius: $r-full;
-  &:hover { background: $text-2; }
+  &:hover { background: var(--c-scrollbar-hover); }
 }
 
 ::selection {
-  background: $accent-mid;
+  background: var(--c-accent-mid);
 }
 
 button {

@@ -4,8 +4,10 @@
 .cm-editor {
   height: 100%;
   font-family: $font-body;
-  font-size: $fs-base;
+  font-size: var(--editor-font-size, #{$fs-base});
   line-height: $lh;
+  background-color: var(--c-bg-editor);
+  transition: background-color $t-normal $ease;
 
   &.cm-focused { outline: none; }
 
@@ -16,27 +18,27 @@
   }
 
   .cm-content {
-    max-width: 720px;
+    max-width: var(--editor-line-width, 720px);
     margin: 0 auto;
     padding: 0;
-    caret-color: $accent;
+    caret-color: var(--c-accent);
   }
 
   .cm-line { padding: 1px 0; }
 
   .cm-cursor {
-    border-left: 1.8px solid $accent;
+    border-left: 1.8px solid var(--c-accent);
   }
 
   .cm-selectionBackground {
-    background: $accent-mid !important;
+    background: var(--c-accent-mid) !important;
   }
   &.cm-focused .cm-selectionBackground {
-    background: $accent-mid !important;
+    background: var(--c-accent-mid) !important;
   }
 
   .cm-activeLine {
-    background: rgba(0,0,0,0.015);
+    background: var(--c-active-line);
   }
 
   .cm-gutters { display: none; }
@@ -46,7 +48,7 @@
 .md-heading {
   font-family: $font-ui;
   font-weight: 700;
-  color: $text;
+  color: var(--c-text);
   line-height: 1.25;
   letter-spacing: -0.02em;
 
@@ -55,11 +57,11 @@
   &--3 { font-size: 1.3em; margin: 0.4em 0 0.15em; }
   &--4 { font-size: 1.1em; margin: 0.3em 0 0.1em; }
   &--5 { font-size: 1em; }
-  &--6 { font-size: 0.95em; color: $text-2; }
+  &--6 { font-size: 0.95em; color: var(--c-text-2); }
 }
 
 .md-heading-mark {
-  color: $accent;
+  color: var(--c-accent);
   opacity: 0.35;
   font-weight: 400;
   font-family: $font-mono;
@@ -72,16 +74,16 @@
 .md-italic { font-style: italic; }
 .md-strikethrough {
   text-decoration: line-through;
-  color: $text-3;
+  color: var(--c-text-3);
 }
 
 .md-inline-code {
   font-family: $font-mono;
   font-size: 0.88em;
-  background: $bg-code;
+  background: var(--c-bg-code);
   padding: 1px 5px;
   border-radius: $r-sm;
-  color: $text-code;
+  color: var(--c-text-code);
 }
 
 // === Syntax Marks ===
@@ -102,11 +104,13 @@
 }
 
 // === Code Block ===
+// Font size is proportional (em) to the editor font size preference, so the
+// code-block glyphs scale together with the rest of the document.
 .md-code-block {
   font-family: $font-mono;
-  font-size: $fs-sm;
-  background: $bg-code-block;
-  color: #d4d4d8;
+  font-size: 0.82em;
+  background: var(--c-bg-code-block);
+  color: var(--c-code-block-text);
   border-radius: $r-lg;
   padding: $sp-4;
   margin: $sp-2 0;
@@ -116,25 +120,25 @@
 
 // === Blockquote ===
 .md-blockquote {
-  border-left: 2px solid $accent;
+  border-left: 2px solid var(--c-accent);
   padding-left: $sp-4;
-  color: $text-2;
+  color: var(--c-text-2);
   margin: $sp-2 0;
 }
 
 .md-blockquote-mark {
-  color: $accent;
+  color: var(--c-accent);
   opacity: 0.3;
 }
 
 // === Link ===
 .md-link {
-  color: $accent;
+  color: var(--c-accent);
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: border-color $t-fast $ease;
   cursor: pointer;
-  &:hover { border-bottom-color: $accent; }
+  &:hover { border-bottom-color: var(--c-accent); }
 }
 
 // === Image ===
@@ -152,11 +156,11 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background: $bg-code;
-  border: 1.5px dashed $border;
+  background: var(--c-bg-code);
+  border: 1.5px dashed var(--c-border);
   border-radius: $r-md;
   padding: $sp-5;
-  color: $text-3;
+  color: var(--c-text-3);
   font-size: $fs-sm;
   min-height: 100px;
   margin: $sp-2 0;
@@ -176,13 +180,13 @@
 .md-hr {
   border: none;
   height: 1px;
-  background: $border;
+  background: var(--c-border);
   margin: $sp-6 0;
 }
 
 // === List ===
 .md-list-marker {
-  color: $accent;
+  color: var(--c-accent);
   font-weight: 600;
 }
 
@@ -193,15 +197,15 @@
   justify-content: center;
   width: 16px;
   height: 16px;
-  border: 1.5px solid $border;
+  border: 1.5px solid var(--c-border);
   border-radius: 3px;
   margin-right: $sp-1;
   vertical-align: middle;
   transition: all $t-fast $ease;
 
   &--checked {
-    background: $accent;
-    border-color: $accent;
+    background: var(--c-accent);
+    border-color: var(--c-accent);
     color: #fff;
     &::after { content: '✓'; font-size: 10px; }
   }
@@ -215,12 +219,12 @@
   font-size: $fs-sm;
 
   th, td {
-    border: 1px solid $border;
+    border: 1px solid var(--c-border);
     padding: $sp-2 $sp-3;
     text-align: left;
   }
   th {
-    background: $bg;
+    background: var(--c-bg);
     font-weight: 600;
   }
 }

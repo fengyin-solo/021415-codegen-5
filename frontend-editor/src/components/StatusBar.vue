@@ -20,19 +20,19 @@ const store = useEditorStore()
   justify-content: center;
   height: 24px;
   gap: $sp-2;
-  background: $bg-elevated;
-  border-top: 1px solid $border-light;
+  background: var(--c-bg-elevated);
+  border-top: 1px solid var(--c-border-light);
   flex-shrink: 0;
 
   &__item {
     font-size: $fs-xs;
-    color: $text-3;
+    color: var(--c-text-3);
     font-family: $font-mono;
   }
 
   &__sep {
     font-size: $fs-xs;
-    color: $border;
+    color: var(--c-border);
   }
 }
 </style>
