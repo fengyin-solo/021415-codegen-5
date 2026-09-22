@@ -4,7 +4,7 @@
 .cm-editor {
   height: 100%;
   font-family: $font-body;
-  font-size: $fs-base;
+  font-size: var(--mira-editor-font-size, $fs-base);
   line-height: $lh;
 
   &.cm-focused { outline: none; }
@@ -16,7 +16,7 @@
   }
 
   .cm-content {
-    max-width: 720px;
+    max-width: var(--mira-line-width, 720px);
     margin: 0 auto;
     padding: 0;
     caret-color: $accent;
@@ -36,7 +36,7 @@
   }
 
   .cm-activeLine {
-    background: rgba(0,0,0,0.015);
+    background: $active-line;
   }
 
   .cm-gutters { display: none; }
@@ -106,7 +106,8 @@
   font-family: $font-mono;
   font-size: $fs-sm;
   background: $bg-code-block;
-  color: #d4d4d8;
+  color: $code-block-text;
+  border: 1px solid $code-block-border;
   border-radius: $r-lg;
   padding: $sp-4;
   margin: $sp-2 0;

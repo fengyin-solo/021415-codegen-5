@@ -5,6 +5,35 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mira — Markdown Editor</title>
+    <script>
+      // Restore appearance preferences before first paint. Any unknown,
+      // corrupt, or out-of-range combination is clamped to safe defaults —
+      // the same rules the app applies on boot.
+      (function () {
+        try {
+          var raw = localStorage.getItem('mira.prefs.v1')
+          var prefs = raw ? JSON.parse(raw) : null
+          var theme = 'light'
+          var fontSize = 16
+          var lineWidth = 720
+          if (prefs && typeof prefs === 'object') {
+            if (prefs.theme === 'light' || prefs.theme === 'sepia' || prefs.theme === 'dark') {
+              theme = prefs.theme
+            }
+            var fs = Number(prefs.fontSize)
+            if (Number.isFinite(fs)) fontSize = Math.min(28, Math.max(12, Math.round(fs)))
+            var lw = Number(prefs.lineWidth)
+            if (Number.isFinite(lw)) lineWidth = Math.min(1200, Math.max(480, Math.round(lw)))
+          }
+          var root = document.documentElement
+          root.dataset.theme = theme
+          root.style.setProperty('--mira-editor-font-size', fontSize + 'px')
+          root.style.setProperty('--mira-line-width', lineWidth + 'px')
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light'
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="app"></div>

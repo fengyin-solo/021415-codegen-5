@@ -1,3 +1,3 @@
-export { createEditor } from './setup'
+export { createEditor, applyEditorTheme } from './setup'
 export { markdownDecorationPlugin } from './decoration-plugin'
 export { parseMarkdownRegions, regionAtPos, cursorOnRegion } from './markdown-parser'

@@ -2,6 +2,97 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;700&display=swap');
 
+// === User-adjustable presentation tokens ===
+// Font size / line width are driven by SettingsModal via prefs store;
+// the values here are only the initial fallbacks.
+:root {
+  --mira-editor-font-size: 16px;
+  --mira-line-width: 720px;
+}
+
+// === Themes ===
+// Light (default) — warm neutral
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --mira-accent: #2563eb;
+  --mira-accent-soft: rgba(37, 99, 235, 0.08);
+  --mira-accent-mid: rgba(37, 99, 235, 0.15);
+
+  --mira-bg: #fafaf9;
+  --mira-bg-editor: #ffffff;
+  --mira-bg-elevated: #ffffff;
+  --mira-bg-code: #f4f4f5;
+  --mira-bg-code-block: #18181b;
+
+  --mira-text: #1c1917;
+  --mira-text-2: #57534e;
+  --mira-text-3: #a8a29e;
+  --mira-text-code: #c026d3;
+
+  --mira-border: #e7e5e4;
+  --mira-border-light: #f5f5f4;
+
+  --mira-active-line: rgba(0, 0, 0, 0.015);
+  --mira-code-block-text: #d4d4d8;
+  --mira-code-block-border: rgba(255, 255, 255, 0.08);
+}
+
+// Sepia — warm paper
+:root[data-theme='sepia'] {
+  color-scheme: light;
+
+  --mira-accent: #b45309;
+  --mira-accent-soft: rgba(180, 83, 9, 0.08);
+  --mira-accent-mid: rgba(180, 83, 9, 0.16);
+
+  --mira-bg: #f0e6d2;
+  --mira-bg-editor: #f7f0e1;
+  --mira-bg-elevated: #f7f0e1;
+  --mira-bg-code: #e6dac0;
+  --mira-bg-code-block: #2a2118;
+
+  --mira-text: #433422;
+  --mira-text-2: #6b5a42;
+  --mira-text-3: #a08c6a;
+  --mira-text-code: #9a3412;
+
+  --mira-border: #d9c9a8;
+  --mira-border-light: #e5d8bd;
+
+  --mira-active-line: rgba(120, 80, 20, 0.04);
+  --mira-code-block-text: #e0d2b4;
+  --mira-code-block-border: rgba(255, 255, 255, 0.06);
+}
+
+// Dark — zinc
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --mira-accent: #60a5fa;
+  --mira-accent-soft: rgba(96, 165, 250, 0.12);
+  --mira-accent-mid: rgba(96, 165, 250, 0.24);
+
+  --mira-bg: #0f1115;
+  --mira-bg-editor: #16181d;
+  --mira-bg-elevated: #1b1e24;
+  --mira-bg-code: #23272e;
+  --mira-bg-code-block: #0b0c0f;
+
+  --mira-text: #e6e4e0;
+  --mira-text-2: #a19e97;
+  --mira-text-3: #6b6862;
+  --mira-text-code: #f0abfc;
+
+  --mira-border: #2c3038;
+  --mira-border-light: #23262d;
+
+  --mira-active-line: rgba(255, 255, 255, 0.035);
+  --mira-code-block-text: #cdd2da;
+  --mira-code-block-border: rgba(255, 255, 255, 0.07);
+}
+
 *,
 *::before,
 *::after {
@@ -24,6 +115,7 @@ body {
   line-height: $lh;
   overflow: hidden;
   height: 100vh;
+  transition: background-color $t-normal $ease, color $t-normal $ease;
 }
 
 #app {

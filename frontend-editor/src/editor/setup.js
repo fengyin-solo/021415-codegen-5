@@ -1,10 +1,10 @@
-import { EditorState } from '@codemirror/state'
+import { EditorState, Compartment } from '@codemirror/state'
 import { EditorView, keymap, drawSelection, highlightActiveLine, dropCursor } from '@codemirror/view'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
-import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from '@codemirror/language'
-import { editorBaseTheme } from './theme'
+import { bracketMatching } from '@codemirror/language'
+import { editorBaseTheme, createSyntaxHighlighting } from './theme'
 import { markdownDecorationPlugin } from './decoration-plugin'
 
 const defaultContent = `# Welcome to MD Live Editor
@@ -52,16 +52,22 @@ The editor focuses on **inline rendering** — what you see is what you get, but
 Happy writing! ✨
 `
 
+// Syntax highlighting lives in its own compartment so a theme switch only
+// swaps the highlight palette. History, keymaps and the document itself
+// are outside the compartment and therefore never reset.
+const syntaxCompartment = new Compartment()
+
 /**
  * Create and mount a CodeMirror 6 editor instance.
  * @param {HTMLElement} parent - The DOM element to mount the editor into
  * @param {Object} [options]
  * @param {string} [options.doc] - Initial document content
+ * @param {string} [options.theme='light'] - Initial UI theme
  * @param {function} [options.onUpdate] - Callback for editor updates
  * @returns {EditorView}
  */
 export function createEditor(parent, options = {}) {
-  const { doc, onUpdate } = options
+  const { doc, theme = 'light', onUpdate } = options
 
   const extensions = [
     // Core
@@ -84,7 +90,7 @@ export function createEditor(parent, options = {}) {
       base: markdownLanguage,
       codeLanguages: languages
     }),
-    syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+    syntaxCompartment.of(createSyntaxHighlighting(theme)),
 
     // Our custom theme
     editorBaseTheme,
@@ -106,5 +112,18 @@ export function createEditor(parent, options = {}) {
     extensions
   })
 
-  return new EditorView({ state, parent })
+  const view = new EditorView({ state, parent })
+  view._syntaxCompartment = syntaxCompartment
+  return view
+}
+
+/**
+ * Reconfigure only the syntax-highlighting palette for an existing view.
+ * Unknown themes are resolved to a safe palette inside createSyntaxHighlighting.
+ */
+export function applyEditorTheme(view, theme) {
+  if (!view || !view._syntaxCompartment) return
+  view.dispatch({
+    effects: view._syntaxCompartment.reconfigure(createSyntaxHighlighting(theme))
+  })
 }
